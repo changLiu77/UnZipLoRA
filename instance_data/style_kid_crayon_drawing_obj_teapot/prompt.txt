@@ -1,0 +1,8 @@
+Subject: teapot
+Style: kid crayon drawing
+
+prompt1: a monadikos teapot on a stove in kid crayon drawing style
+prompt2: a monadikos teapot on a picnic table in kid crayon drawing style
+prompt3: a monadikos teapot in the jungle in kid crayon drawing style
+prompt4: a monadikos teapot on the mountain in kid crayon drawing style
+prompt5: a purple monadikos teapot in kid crayon drawing style

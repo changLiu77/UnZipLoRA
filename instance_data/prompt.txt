@@ -1,0 +1,46 @@
+flat_cartoon_teapot: a teapot in flat cartoon illustration style  
+stuffed_waterpaint: a stuffed animal in watercolor painting style  
+cartoon_dog: a dog in flat cartoon illustration style  
+fox_waterpaint: a stuffed animal in watercolor painting style  
+watercolor_horse: a horse in watercolor painting style  
+sketch_cat: a cat in sketch style  
+anime_cat: a cat in anime illustration style  
+chinese_deer: a deer in traditional Chinese painting style  
+kid_draw_teapot: a teapot in kid crayon drawing style  
+waterpaint_dog: a dog in watercolor painting style  
+linedraw_telephone: a telephone in linedrawing style  
+mosaic_teapot: a teapot in mosaic style  
+3d_umbrella: a Japenese umbrella in 3d rendering style  
+cartoon_starfish: a starfish in cartoon art illustration style  
+cartoon_backpack: a backpack in cartoon art flat illustration style  
+cartoon_hat: a sun hat in flat cartoon illustration style  
+line_art_kangaroo: a kangaroo in line art style  
+kid_crayon_bear: a bear in kid crayon drawing style  
+3d_rose: a rose in melting golden 3d rendering style  
+isometric_lighthouse: a lighthouse in isometric illustration style  
+graffiti_roket: a rocket in neon graffiti style  
+neon_graffiti_rocket: a rocket in neon graffiti style  
+inpressionism_piano: a piano in abstract impressionism style  
+poster_helicopter: a helicopter in retro poster style  
+isometric_baloon: a hot air baloon in isometric illustration style  
+watercolor_lantern1: a lantern in watercolor style  
+watercolor_lantern2: a lantern in watercolor style  
+vector_art_bug: a ladybug in minimal vector art style  
+tattoo_christmas: a Christmas tree in tattoo art style  
+logo_inkwell: an inkwell in educational institution logo style  
+disney_cartoon_coffee_machine: a coffee machine in disney cartoon style  
+poster_dragon: a dragon in vintage travel poster style  
+chalk_art_fox: a fox in chalk art style  
+papercut_art_ballon: a hot air balloon in papercut art style  
+sunset_painting_kiwi: a kiwi fruit in Hawaiian sunset painting style  
+chalk_art_lantern: a lantern in chalk art style  
+isometric_lighthouse2: a lighthouse in isometric illustration style  
+geometric_microscope: a microscope in geometric shapes style  
+steampunk_mushroom: a mushroom in steampunk mechanical style  
+ukiyo-e_pizza: a pizza in ukiyo-e style  
+woodblock_print_guitar: a retro guitar in woodblock print style  
+pop_art_rose: a rose in pop art style  
+impressionism_duck: a rubber duck in abstract impressionism style  
+doodle_shoe: a running shoe in doodle art style  
+origami_sunflower: a sunflower in origami style  
+graffiti_ufo: a UFO in abastract graffiti style  
