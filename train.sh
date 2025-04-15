@@ -1,30 +1,10 @@
-#!/usr/bin/bash
-# source /etc/bashrc
-# source /etc/profile
-# source /etc/profile.d/modules.sh
-# module load gcc/9.2.0
-
-# source ~/.bashrc
-# source ~/.bash_profile
-# echo JOB STARTED
-# nvidia-smi
-# source /home/changl25/miniconda3/etc/profile.d/conda.sh
-# conda activate ziplora
-# cd /home/changl25/ziplora-pytorch
-
-
-
-
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 
-
-# Final setting
-# overlap_first_flag=True 
-# accumulate_cone_flag=True
-# column_per_sep_flag=False
-# finetune_mask_flag=False 
-# export period_sample_epoch=3
-# export sampled_column_ratio=0.1
+# Hyper parameters
+export period_sample_epoch=3
+export sampled_column_ratio=0.1
+freeze_flag=True
+column_per_sep_flag=True
 
 # For weight similarity
 export CONTENT_LR=0.00005
@@ -33,24 +13,24 @@ export weight_lr=0.005
 export similarity_lambda=0.01
 export RANK=64
 export WANDB_NAME="unziplora"
-export INSTANCE_DIR="instance_data/anime_cat"
+export INSTANCE_DIR="instance_data/pop_rose"
 export OUTPUT_DIR="models"
-export STEPS=1000
+export STEPS=600
 
 # Training prompt
-export PROMPT="A monadikos cat in anime illustration style"
-export CONTENT_FORWARD_PROMPT="A monadikos cat"
-export STYLE_FORWARD_PROMPT="A cat in anime illustration style"
+export PROMPT="A monadikos rose in pop art style"
+export CONTENT_FORWARD_PROMPT="A monadikos rose"
+export STYLE_FORWARD_PROMPT="A rose in pop art style"
 # For validation
-export VALID_CONTENT="A monadikos cat standing on a table"
-export VALID_PROMPT="A monadikos cat standing on a table in anime illustration style"
-export VALID_STYLE="A cat in anime illustration style standing on a table"
+export VALID_CONTENT="A monadikos rose on a table"
+export VALID_PROMPT="A monadikos rose on a table in pop art style"
+export VALID_STYLE="A rose in pop art style on a table"
 
 # for content validation
-export VALID_CONTENT_PROMPT="a photo of a monadikos cat standing on a table"
+export VALID_CONTENT_PROMPT="a photo of a monadikos rose on a table"
 
 # for style validation
-export VALID_STYLE_PROMPT="A dog in anime illustration style"
+export VALID_STYLE_PROMPT="A dog in pop art style"
 
 
 
@@ -83,13 +63,8 @@ accelerate launch train_inverse_ziplora_layer_column.py \
   --validation_style="${VALID_STYLE}" \
   --validation_prompt="${VALID_PROMPT}" \
   --validation_prompt_style="${VALID_STYLE_PROMPT}" \
-  --validation_prompt_content="${VALID_CONTENT_PROMPT}"
-  # --with_period_column_separation=$column_per_sep_flag \
-  # --sample_times=$period_sample_epoch \
-  # --column_ratio=$sampled_column_ratio \
-  # --with_no_overlap_first=$overlap_first_flag \
-  # --with_accumulate_cone=$accumulate_cone_flag \
-  # --with_finetune_mask=$finetune_mask_flag \
-  # --with_saved_per_validation="${saved_per_validation_flag}" \
-  # --with_image_per_validation="${image_per_validation_flag}" \
-  # --with_grad_record="$grad_record_flag" \
+  --validation_prompt_content="${VALID_CONTENT_PROMPT}" \
+  --sample_times=$period_sample_epoch \
+  --column_ratio=$sampled_column_ratio \
+  --with_freeze_unet="${freeze_flag}" \
+  --with_period_column_separation=$column_per_sep_flag \

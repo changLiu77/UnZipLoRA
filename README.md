@@ -12,7 +12,7 @@ This is the official release of the __UnZipLoRA__ and more details can be found 
 
 ## Requirements
 
-Install dependencies
+Install dependencies:
 
 ```
 conda create -n unziplora python=3.11
@@ -23,22 +23,66 @@ pip install jupyter notebook
 
 ## Data
 
-We have public the figures and corresponding prompts we used to train and test our models in [data](instance_data)
+We provide the figures and corresponding prompts used for training and evaluation in the [data](instance_data).
 
 ## Train
-Street TryOn Dataset contains __unpaired__ __in-the-wild person images__ that can be used for virtual try-on tasks. Street TryOn Dataset consists of 12,364 and 2089 images filtered from [Deepfashion2 Dataset](https://github.com/switchablenorms/DeepFashion2) for training and validation.
 
+To train the content and style model symotanenously, you need to provide:
 
-We release all the annotations mentioned in [our paper](https://arxiv.org/pdf/2311.16094.pdf). Note for images: we provide scripts to extract them from DeepFashion2 dataset. Please follow the below steps to download the dataset into your datapath `$DATA`. 
+* One or more reference images
+* A prompt, a content prompt and a style prompt
+* Output path to save the trained models
+
+You can directly run the [training script](train.sh).  
+
+__UnZipLoRA__ proposes three separation strategies. All hyperparameters in the script match the settings used in the paper, and can be adjusted for ablation and tuning.
+
+**Core Hyperparameters**
+
+| Flag                          | Description                              | Default        |
+|------------------------------|------------------------------------------|----------------|
+| `--pretrained_model_name_or_path` | Path to base model (e.g. SDXL)      | Required       |
+| `--instance_data_dir`         | Path to training images                  | Required       |
+| `--output_dir`                | Path to save outputs                     | Required       |
+| `--instance_prompt`          | Prompt used for training                 | Required       |
+| `--content_forward_prompt`   | Prompt used for training(content)         | Required       |
+| `--style_forward_prompt`     | Prompt used for training(style)           | Required       |
+| `--rank`                      | LoRA rank                                | `64`           |
+| `--max_train_steps`           | Number of training steps                 | `600`         |
+| `--content_learning_rate`     | LR for content LoRA                      | `5e-5`         |
+| `--style_learning_rate`       | LR for style LoRA                        | `5e-5`         |
+| `--weight_learning_rate`      | LR for weight fusion                     | `5e-3`         |
+
+---
+
+**Logging / Ablation Flags**
+
+| Flag                          | Description                              | Default        |
+|------------------------------|------------------------------------------|----------------|
+| `--with_period_column_separation`| Apply column separation              | `True`        |
+| `--with_freeze_unet`         | Apply block separation                   | `True`        |
+| `--with_saved_per_validation`| Save model on every validation step      | `False`        |
+| `--with_image_per_validation`| Generate images at every validation step    | `False`        |
+
+---
+
+**Experimental**
+
+| Flag                          | Description                              | Default        |
+|------------------------------|------------------------------------------|----------------|
+| `--sample_times`             | Times of re-caliberate LoRA column masks | `3`            |
+| `--column_ratio`             | Ratio of sampled columns for LoRA mask   | `0.1`          |
+
 
 ## Infer
 
-After training, use [`infer.py`](infer.py) to generate images with your trained LoRAs. Given prompts, content prompts, style prompts for combined generation, while give either content or style prompts.
+After training, use [`infer.py`](infer.py) to generate images with your trained LoRAs. You can:
 
-We also provide a [notebook](playground.ipynb) to play with in-figure generation and cross-figure generation.
+* Generate content / style recontextualizations with individual saved content / style models and given prompts
+* Generate combined recontexualization by merging both content and style LoRAs with learned mask weights 
+* Generate cross-image recontexualization by combining LoRAs and mask weights from different source figures
 
-Note:
-- The default dataset configuration is loading ATR segmentation for street images and loading the provided segmentation for VITON-HD. If you need either in different format, you can change the `segm_dir` or `garment_segm_dir` in the corresponding ``.yaml`` config file with your new datapath.
+We also provide a [__notebook__](playground.ipynb) to play with these functionalities.
 
 
 ## Citations
