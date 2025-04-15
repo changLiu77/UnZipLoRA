@@ -76,7 +76,7 @@ __UnZipLoRA__ proposes three separation strategies. All hyperparameters in the s
 
 ## Infer
 
-After training, use [`infer.py`](infer.py) to generate images with your trained LoRAs. You can:
+After training, use [infer script](infer.sh) to generate images with your trained LoRAs. You can:
 
 * Generate content / style recontextualizations with individual saved content / style models and given prompts
 * Generate combined recontexualization by merging both content and style LoRAs with learned mask weights 
