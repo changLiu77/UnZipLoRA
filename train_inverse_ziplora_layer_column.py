@@ -706,7 +706,7 @@ def parse_args(input_args=None):
     )
     parser.add_argument(
         "--with_saved_per_validation",
-        action="store_false",
+        action="store_true",
         help="Flag to store model when validation",
     )
     parser.add_argument(
@@ -719,15 +719,10 @@ def parse_args(input_args=None):
         action="store_true",
         help="Flag to add block separation",
     )
-    parser.add_argument(
-        "--with_column_separate",
-        action="store_true",
-        help="Flag to add column separation.",
-    )
     # * column separation parameters
     parser.add_argument(
         "--with_period_column_separation",
-        action="store_true",
+        action="store_false",
         help="Flag to add columns periodically",
     )
     parser.add_argument(
