@@ -1,10 +1,23 @@
+
+#!/usr/bin/bash
+source /etc/bashrc
+source /etc/profile
+source /etc/profile.d/modules.sh
+module load gcc/9.2.0
+
+source ~/.bashrc
+source ~/.bash_profile
+source /home/changl25/miniconda3/etc/profile.d/conda.sh
+conda activate unziplora
+
+
+
+
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 
 # Hyper parameters
 export period_sample_epoch=3
 export sampled_column_ratio=0.1
-freeze_flag=True
-column_per_sep_flag=True
 
 # For weight similarity
 export CONTENT_LR=0.00005
@@ -13,24 +26,24 @@ export weight_lr=0.005
 export similarity_lambda=0.01
 export RANK=64
 export WANDB_NAME="unziplora"
-export INSTANCE_DIR="instance_data/pop_rose"
-export OUTPUT_DIR="models"
+export INSTANCE_DIR="instance_data/geometric_microscope"
+export OUTPUT_DIR="models/geometric_microscope/geometric_microscoperose"
 export STEPS=600
 
 # Training prompt
-export PROMPT="A monadikos rose in pop art style"
-export CONTENT_FORWARD_PROMPT="A monadikos rose"
-export STYLE_FORWARD_PROMPT="A rose in pop art style"
+export PROMPT="A monadikos rose in geometric shapes style"
+export CONTENT_FORWARD_PROMPT="A monadikos microscope"
+export STYLE_FORWARD_PROMPT="A microscope in geometric shapes style"
 # For validation
-export VALID_CONTENT="A monadikos rose on a table"
-export VALID_PROMPT="A monadikos rose on a table in pop art style"
-export VALID_STYLE="A rose in pop art style on a table"
+export VALID_CONTENT="A monadikos microscope on a table"
+export VALID_PROMPT="A monadikos microscope on a table in geometric shapes style"
+export VALID_STYLE="A microscope in geometric shapes style on a table"
 
 # for content validation
-export VALID_CONTENT_PROMPT="a photo of a monadikos rose on a table"
+export VALID_CONTENT_PROMPT="a photo of a monadikos microscope on a table"
 
 # for style validation
-export VALID_STYLE_PROMPT="A dog in pop art style"
+export VALID_STYLE_PROMPT="A dog in geometric shapes style"
 
 
 
@@ -54,7 +67,6 @@ accelerate launch train_inverse_ziplora_layer_column.py \
   --lr_warmup_steps=0 \
   --max_train_steps="$STEPS" \
   --checkpointing_steps=500 \
-  --validation_epochs=$validate_epochs \
   --mixed_precision="fp16" \
   --seed="0" \
   --use_8bit_adam \
@@ -66,5 +78,5 @@ accelerate launch train_inverse_ziplora_layer_column.py \
   --validation_prompt_content="${VALID_CONTENT_PROMPT}" \
   --sample_times=$period_sample_epoch \
   --column_ratio=$sampled_column_ratio \
-  --with_freeze_unet="${freeze_flag}" \
-  --with_period_column_separation=$column_per_sep_flag \
+  --with_freeze_unet \
+  --with_period_column_separation

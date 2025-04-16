@@ -1,29 +1,25 @@
-#!/usr/bin/bash
-# source /etc/bashrc
-# source /etc/profile
-# source /etc/profile.d/modules.sh
-# module load gcc/9.2.0
+# !/usr/bin/bash
+source /etc/bashrc
+source /etc/profile
+source /etc/profile.d/modules.sh
+module load gcc/9.2.0
 
-# source ~/.bashrc
-# source ~/.bash_profile
-# echo JOB STARTED
-# nvidia-smi
-# source /home/changl25/miniconda3/etc/profile.d/conda.sh
-# conda activate ziplora
-# cd /home/changl25/ziplora-pytorch
-
+source ~/.bashrc
+source ~/.bash_profile
+echo JOB STARTED
+nvidia-smi
+source /home/changl25/miniconda3/etc/profile.d/conda.sh
+conda activate unziplora
 
 
-
-export unziplora_flag=True
 
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 # export MODEL_PATH="inverse_ziplora"
 export RANK=64
 export NUM=1
 
-export OUTPUT_DIR="models/"
-export SAVE_DIR="instance_data/"
+export OUTPUT_DIR="models/pop_art_rose/pop_art_rose"
+export SAVE_DIR="output/pop_art_rose/"
 
 export VALID_PROMPTS=(
   "a monadikos rose on a skateboard in pop art style"
@@ -60,15 +56,15 @@ export VALID_STYLE_PROMPTS=(
 VALID_STYLE_PROMPT=$(IFS=,; echo "${VALID_STYLE_PROMPTS[*]}")
 export VALID_STYLE_PROMPT
 
-accelerate launch infer_user_study.py \
+accelerate launch infer.py \
   --output_dir="$OUTPUT_DIR" \
   --rank="${RANK}" \
   --num="${NUM}" \
-  --with_unziplora=${unziplora_flag} \
+  --with_unziplora \
   --save_dir="$SAVE_DIR" \
   --validation_prompt_content_recontext="${VALID_CONTENT_RECON_PROMPT}" \
   --validation_prompt_style="${VALID_STYLE_PROMPT}" \
   --validation_prompt="${VALID_PROMPT}" \
   --validation_prompt_style_forward="${VALID_STYLE}" \
   --validation_prompt_content_forward="${VALID_CONTENT}" 
-done
+

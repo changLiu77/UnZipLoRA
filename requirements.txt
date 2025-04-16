@@ -2,7 +2,7 @@
 diffusers==0.25.0
 accelerate>=0.16.0
 torchvision
-transformers>=4.25.1
+transformers==4.42.3
 ftfy
 tensorboard
 Jinja2
@@ -11,4 +11,6 @@ bitsandbytes>=0.40.0
 xformers>=0.0.20
 scipy
 fire
-gradio
+gradio==4.37.2
+seaborn
+huggingface_hub==0.23.4
