@@ -1,18 +1,3 @@
-
-#!/usr/bin/bash
-source /etc/bashrc
-source /etc/profile
-source /etc/profile.d/modules.sh
-module load gcc/9.2.0
-
-source ~/.bashrc
-source ~/.bash_profile
-source /home/changl25/miniconda3/etc/profile.d/conda.sh
-conda activate unziplora
-
-
-
-
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 
 # Hyper parameters
@@ -77,6 +62,4 @@ accelerate launch train_inverse_ziplora_layer_column.py \
   --validation_prompt_style="${VALID_STYLE_PROMPT}" \
   --validation_prompt_content="${VALID_CONTENT_PROMPT}" \
   --sample_times=$period_sample_epoch \
-  --column_ratio=$sampled_column_ratio \
-  --with_freeze_unet \
-  --with_period_column_separation
+  --column_ratio=$sampled_column_ratio 

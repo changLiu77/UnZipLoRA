@@ -734,7 +734,7 @@ def parse_args(input_args=None):
     )
     parser.add_argument(
         "--with_freeze_unet",
-        action="store_true",
+        action="store_false",
         help="Flag to add block separation",
     )
     # * column separation parameters

@@ -1,18 +1,3 @@
-# !/usr/bin/bash
-source /etc/bashrc
-source /etc/profile
-source /etc/profile.d/modules.sh
-module load gcc/9.2.0
-
-source ~/.bashrc
-source ~/.bash_profile
-echo JOB STARTED
-nvidia-smi
-source /home/changl25/miniconda3/etc/profile.d/conda.sh
-conda activate unziplora
-
-
-
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 # export MODEL_PATH="inverse_ziplora"
 export RANK=64
