@@ -8,7 +8,6 @@ from diffusers import (
 )
 
 from inverse_ziplora_comb_separate.utils import *
-# from csd_model import CSD_CLIP, convert_state_dict
 
 MODEL_ID = "stabilityai/stable-diffusion-xl-base-1.0"
 # MODEL_ID="etri-vilab/koala-lightning-1b"
@@ -20,7 +19,7 @@ def parse_args(input_args=None):
     parser = argparse.ArgumentParser(description="Simple example of a training script.")
     parser.add_argument(
         "--with_unziplora",
-        action="store_false",
+        action="store_true",
         help="Whether use different prompts to generate",
     )
     parser.add_argument(
@@ -164,7 +163,8 @@ def main(args):
             prompt_catogory = os.path.join(args.save_dir, "combine_recontextual_outputs")
             os.makedirs(prompt_catogory, exist_ok=True)
             if args.with_unziplora:
-                generate_save_img(args, pipeline, args.validation_prompt, prompt_catogory)
+                generate_save_img(args, pipeline, args.validation_prompt, prompt_catogory, \
+                    args.validation_prompt_content_forward, args.validation_prompt_style_forward)
             else:
                 generate_save_img(args, pipeline, args.validation_prompt, prompt_catogory)
             
@@ -200,7 +200,6 @@ def main(args):
         
 if __name__ == "__main__":
     args = parse_args()
-    args.validation_prompt_content=args.validation_prompt_content.split(",")
     args.validation_prompt=args.validation_prompt.split(",")
     args.validation_prompt_style_forward=args.validation_prompt_style_forward.split(",")
     args.validation_prompt_content_forward=args.validation_prompt_content_forward.split(",")

@@ -54,7 +54,6 @@ from diffusers import (
     DDPMScheduler,
     DPMSolverMultistepScheduler,
     StableDiffusionXLPipeline,
-    UNet2DConditionModel,
 )
 from diffusers.loaders import LoraLoaderMixin
 from diffusers.optimization import get_scheduler
@@ -269,6 +268,25 @@ def parse_args(input_args=None):
         default=None,
         required=False,
         help="A folder containing the training data of class images.",
+    )
+    parser.add_argument(
+        "--class_prompt",
+        type=str,
+        default=None,
+        help="The prompt to specify images in the same class as provided instance images.",
+    )
+    parser.add_argument(
+        "--class_data_dir_2",
+        type=str,
+        default=None,
+        required=False,
+        help="A folder containing the training data of class images.",
+    )
+    parser.add_argument(
+        "--class_prompt_2",
+        type=str,
+        default=None,
+        help="The prompt to specify images in the same class as provided instance images.",
     )
     parser.add_argument(
         "--instance_prompt",

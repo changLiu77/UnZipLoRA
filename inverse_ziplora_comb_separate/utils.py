@@ -1,14 +1,8 @@
-from io import BytesIO
 import os
-from statistics import mean
 from typing import Optional, Dict, Union
 from huggingface_hub import hf_hub_download
-from safetensors.torch import load_file
 import copy 
 
-from matplotlib import pyplot as plt
-import numpy as np
-import seaborn as sns
 import torch
 from safetensors import safe_open
 from diffusers.loaders.lora import LORA_WEIGHT_NAME_SAFE
@@ -25,10 +19,8 @@ from diffusers import (
 from transformers import (
     AutoTokenizer, 
     CLIPTextModel, 
-    CLIPTokenizer, 
     CLIPTextModelWithProjection,
     )
-from csd_model import CSD_CLIP, convert_state_dict
 from record_utils.cone import cone_matrix, cone_column_sparsity, draw_concatenated_heatmap
 
 SDXL_group_list = [
