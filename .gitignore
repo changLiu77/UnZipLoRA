@@ -13,3 +13,6 @@ inverse_ziplora_comb_separate/__pycache__/transformer_seperate_2d.cpython-311.py
 inverse_ziplora_comb_separate/__pycache__/unet_2d_seperate_condition.cpython-311.pyc
 inverse_ziplora_comb_separate/__pycache__/unet_seperate_block.cpython-311.pyc
 inverse_ziplora_comb_separate/__pycache__/utils.cpython-311.pyc
+output/*
+*.pth
+*.safetensors

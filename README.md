@@ -16,6 +16,7 @@ Install dependencies:
 
 ```
 conda create -n unziplora python=3.11
+pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu118
 conda activate unziplora
 pip install -r requirements.txt
 pip install jupyter notebook
