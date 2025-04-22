@@ -2,10 +2,12 @@
 [\[Paper\]](https://arxiv.org/abs/2412.04465) 
 [\[Project Page\]](https://unziplora.github.io/)
 
+
+![image](cover_images/teaser.png)
+
+
 This repository contains the official implementation of __UnZipLoRA__ -- a novel technique for decoupling content and style from single input image by learning two distinct LoRAs simultaneously. UnZipLoRA ensures that the resulting LoRAs are compatible, i.e., they can be seamlessly combined using direct addition. UnZipLoRA enables independent manipulation and recontextualization of subject and style, including generating variations of each, applying the extracted style to new subjects, and recombining them to reconstruct the original image or create novel variations. For more details, please refer to our paper [UnZipLoRA: Separating Content and Style from a Single Image](https://arxiv.org/abs/2412.04465).
 
-    
-![image](cover_images/teaser.png)
 
 ## Requirements
 
