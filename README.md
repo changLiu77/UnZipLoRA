@@ -85,6 +85,7 @@ After training, use [infer script](infer.sh) to generate images with your traine
 
 We also provide a [__notebook__](playground.ipynb) to play with these functionalities.
 
+You can download two example models from [__Google Drive__](https://drive.google.com/file/d/1oaDBGntlg3yX3Nig1BaLEllLKp82-l21/view?usp=drive_link) and try out these functionalities using them.
 
 ## Citations
 If you find this work helpful, please cite us as:
