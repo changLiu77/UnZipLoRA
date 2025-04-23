@@ -8,9 +8,9 @@ from safetensors import safe_open
 from diffusers.loaders.lora import LORA_WEIGHT_NAME_SAFE
 import itertools
 
-from inverse_ziplora_comb_separate.inverse_ziplora_separate import UnZipLoRALinearLayer, UnZipLoRALinearLayerInfer
-from inverse_ziplora_comb_separate.pipeline_stable_diffusion_xl_seperate import StableDiffusionXLSeperatePipeline
-from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionModel
+from unziplora_unet.unziplora_linear_layer import UnZipLoRALinearLayer, UnZipLoRALinearLayerInfer
+from unziplora_unet.pipeline_stable_diffusion_xl import StableDiffusionXLPipeline
+from unziplora_unet.unet_2d_condition import UNet2DConditionModel
 
 from diffusers import (
      DDPMScheduler, 
@@ -514,7 +514,7 @@ def load_pipeline_from_sdxl(MODEL_ID,
             subfolder="text_encoder_2",
             revision=None,
         )
-    pipeline = StableDiffusionXLSeperatePipeline(
+    pipeline = StableDiffusionXLPipeline(
         vae = vae,
         text_encoder=text_encoder_one,
         text_encoder_2=text_encoder_two,

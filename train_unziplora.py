@@ -60,10 +60,10 @@ from diffusers.optimization import get_scheduler
 from diffusers.utils import check_min_version, is_wandb_available
 from diffusers.utils.import_utils import is_xformers_available
 
-from inverse_ziplora_comb_separate.inverse_ziplora_separate import UnZipLoRALinearLayer
-from inverse_ziplora_comb_separate.pipeline_stable_diffusion_xl_seperate import StableDiffusionXLSeperatePipeline
-from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionModel
-from inverse_ziplora_comb_separate.utils import *
+from unziplora_unet.unziplora_linear_layer import UnZipLoRALinearLayer
+from unziplora_unet.pipeline_stable_diffusion_xl import StableDiffusionXLPipeline
+from unziplora_unet.unet_2d_condition import UNet2DConditionModel
+from unziplora_unet.utils import *
 
 # Will error if the minimal version of diffusers is not installed. Remove at your own risks.
 check_min_version("0.24.0.dev0")
@@ -1836,7 +1836,7 @@ def main(args):
         generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
         # Currently the context determination is a bit hand-wavy. We can improve it in the future if there's a better
         # way to condition it. Reference: https://github.com/huggingface/diffusers/pull/7126#issuecomment-1968523051
-        if pipeline.__class__.__name__ == 'StableDiffusionXLSeperatePipeline':
+        if pipeline.__class__.__name__ == 'StableDiffusionXLPipeline':
             pipeline_args = {"prompt": validation_prompt, 
                             "prompt_content": validation_prompt_content, 
                             "prompt_style": validation_prompt_style}
@@ -2195,7 +2195,7 @@ def main(args):
                             subfolder="text_encoder_2",
                             revision=args.revision,
                         )
-                    pipeline = StableDiffusionXLSeperatePipeline.from_pretrained(
+                    pipeline = StableDiffusionXLPipeline.from_pretrained(
                         args.pretrained_model_name_or_path,
                         vae=vae,
                         text_encoder=accelerator.unwrap_model(text_encoder_one),

@@ -13,10 +13,10 @@ from diffusers.models.lora import LoRACompatibleConv, LoRACompatibleLinear
 from diffusers.models.normalization import AdaLayerNormSingle
 from diffusers.models.transformer_2d import Transformer2DModel, Transformer2DModelOutput
 
-from inverse_ziplora_comb_separate.attention_separate import BasicTransformerBlock
+from unziplora_unet.attention import BasicTransformerBlock
 
 
-class Transformer2DSeperateModel(Transformer2DModel):
+class Transformer2DModel(Transformer2DModel):
     """
     A 2D Transformer model for image-like data.
 

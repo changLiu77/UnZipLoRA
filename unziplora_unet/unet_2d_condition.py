@@ -32,7 +32,7 @@ from diffusers.models.unet_2d_blocks import (
     UNetMidBlock2D,
     UNetMidBlock2DSimpleCrossAttn,
 )
-from inverse_ziplora_comb_separate.unet_seperate_block import *
+from unziplora_unet.unet_block import *
 
 class UNet2DConditionModel(UNet2DConditionModel):
     def __init__(

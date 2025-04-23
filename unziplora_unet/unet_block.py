@@ -20,7 +20,7 @@ from diffusers.utils import is_torch_version, logging
 from diffusers.utils.torch_utils import apply_freeu
 from diffusers.models.unet_2d_blocks import *
 
-from inverse_ziplora_comb_separate.transformer_seperate_2d import *
+from unziplora_unet.transformer_2d import *
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
@@ -505,7 +505,7 @@ class UNetMidBlock2DCrossAttn(UNetMidBlock2DCrossAttn):
         for i in range(num_layers):
             if not dual_cross_attention:
                 attentions.append(
-                    Transformer2DSeperateModel(
+                    Transformer2DModel(
                         num_attention_heads,
                         in_channels // num_attention_heads,
                         in_channels=in_channels,
@@ -646,7 +646,7 @@ class CrossAttnDownBlock2D(CrossAttnDownBlock2D):
 
             if not dual_cross_attention:
                 attentions.append(
-                    Transformer2DSeperateModel(
+                    Transformer2DModel(
                         num_attention_heads,
                         out_channels // num_attention_heads,
                         in_channels=out_channels,
@@ -808,7 +808,7 @@ class CrossAttnUpBlock2D(CrossAttnUpBlock2D):
         for i in range(num_layers):
             if not dual_cross_attention:
                 attentions.append(
-                    Transformer2DSeperateModel(
+                    Transformer2DModel(
                         num_attention_heads,
                         out_channels // num_attention_heads,
                         in_channels=out_channels,

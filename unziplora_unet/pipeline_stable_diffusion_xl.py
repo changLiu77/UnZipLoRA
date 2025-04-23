@@ -24,7 +24,7 @@ from diffusers.utils import (
 )
 from diffusers.schedulers import KarrasDiffusionSchedulers
 
-from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionModel
+from unziplora_unet.unet_2d_condition import UNet2DConditionModel
 
 if is_invisible_watermark_available():
     from diffusers.pipelines.stable_diffusion_xl.watermark import StableDiffusionXLWatermarker
@@ -54,7 +54,7 @@ EXAMPLE_DOC_STRING = """
 
 
 
-class StableDiffusionXLSeperatePipeline(
+class StableDiffusionXLPipeline(
     StableDiffusionXLPipeline
 ):
     r"""

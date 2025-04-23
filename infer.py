@@ -7,7 +7,7 @@ from diffusers import (
     StableDiffusionXLPipeline,
 )
 
-from inverse_ziplora_comb_separate.utils import *
+from unziplora_unet.utils import *
 
 MODEL_ID = "stabilityai/stable-diffusion-xl-base-1.0"
 # MODEL_ID="etri-vilab/koala-lightning-1b"
@@ -89,7 +89,7 @@ def log_validation(pipeline, prompt, prompt_content="", prompt_style="", seed=0,
     generator = torch.Generator(device=device).manual_seed(seed)
     # Currently the context determination is a bit hand-wavy. We can improve it in the future if there's a better
     # way to condition it. Reference: https://github.com/huggingface/diffusers/pull/7126#issuecomment-1968523051
-    if pipeline.__class__.__name__ == 'StableDiffusionXLSeperatePipeline':
+    if pipeline.__class__.__name__ == 'StableDiffusionXLPipeline':
         pipeline_args = {"prompt": prompt, 
                         "prompt_content": prompt_content, 
                         "prompt_style": prompt_style}
@@ -115,7 +115,7 @@ def generate_save_img(args, pipeline, prompt, prompt_catogory, prompt_content_fo
         os.makedirs(prompt_dir, exist_ok=True)
         for seed in seeds:
             print(prompt[i])
-            if pipeline.__class__.__name__ == 'StableDiffusionXLSeperatePipeline':
+            if pipeline.__class__.__name__ == 'StableDiffusionXLPipeline':
                 images = log_validation(
                     pipeline,
                     prompt[i],

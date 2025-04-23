@@ -3,7 +3,7 @@ import torch
 from diffusers.models.lora import LoRACompatibleLinear, LoRALinearLayer
 from torch import nn 
 
-class LoRACompatibleSeperateLinear(nn.Linear):
+class LoRACompatibleLinear(nn.Linear):
     """
     A Linear layer that can be used with LoRA.
     """
