@@ -8,10 +8,10 @@ from diffusers.utils.torch_utils import maybe_allow_in_graph
 from diffusers.models.attention import BasicTransformerBlock, _chunked_feed_forward
 from diffusers.models.normalization import AdaLayerNorm, AdaLayerNormContinuous, AdaLayerNormZero, RMSNorm
 
-from inverse_ziplora_comb_separate.attention_processor_separate import AttentionSeparate
+from inverse_ziplora_comb_separate.attention_processor_separate import Attention
 
 @maybe_allow_in_graph
-class BasicTransformerSeparateBlock(BasicTransformerBlock):
+class BasicTransformerBlock(BasicTransformerBlock):
     r"""
     Use separate attention module for attn.
     """
@@ -67,7 +67,7 @@ class BasicTransformerSeparateBlock(BasicTransformerBlock):
             attention_out_bias,
         )
         
-        self.attn1 = AttentionSeparate(
+        self.attn1 = Attention(
             query_dim=dim,
             heads=num_attention_heads,
             dim_head=attention_head_dim,
@@ -96,7 +96,7 @@ class BasicTransformerSeparateBlock(BasicTransformerBlock):
             else:
                 self.norm2 = nn.LayerNorm(dim, norm_eps, norm_elementwise_affine)
 
-            self.attn2 = AttentionSeparate(
+            self.attn2 = Attention(
                 query_dim=dim,
                 cross_attention_dim=cross_attention_dim if not double_self_attention else None,
                 heads=num_attention_heads,

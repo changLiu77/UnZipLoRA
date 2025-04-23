@@ -11,28 +11,28 @@ export weight_lr=0.005
 export similarity_lambda=0.01
 export RANK=64
 export WANDB_NAME="unziplora"
-export INSTANCE_DIR="instance_data/geometric_microscope"
-export OUTPUT_DIR="models/geometric_microscope/geometric_microscoperose"
+export INSTANCE_DIR="instance_data/sketch_cat"
+export OUTPUT_DIR="models/sketch_cat/sketch_cat"
 export STEPS=600
 
 # Training prompt
-export PROMPT="A monadikos rose in geometric shapes style"
-export CONTENT_FORWARD_PROMPT="A monadikos microscope"
-export STYLE_FORWARD_PROMPT="A microscope in geometric shapes style"
+export PROMPT="A monadikos cat in sketch style"
+export CONTENT_FORWARD_PROMPT="A monadikos cat"
+export STYLE_FORWARD_PROMPT="A cat in sketch style"
 # For validation
-export VALID_CONTENT="A monadikos microscope on a table"
-export VALID_PROMPT="A monadikos microscope on a table in geometric shapes style"
-export VALID_STYLE="A microscope in geometric shapes style on a table"
+export VALID_CONTENT="A monadikos cat on a table"
+export VALID_PROMPT="A monadikos cat on a table in sketch style"
+export VALID_STYLE="A cat in sketch style on a table"
 
 # for content validation
-export VALID_CONTENT_PROMPT="a photo of a monadikos microscope on a table"
+export VALID_CONTENT_PROMPT="a photo of a monadikos cat on a table"
 
 # for style validation
-export VALID_STYLE_PROMPT="A dog in geometric shapes style"
+export VALID_STYLE_PROMPT="A dog in sketch style"
 
 
 
-accelerate launch train_unziplora_layer_column.py \
+accelerate launch train_unziplora.py \
   --pretrained_model_name_or_path=$MODEL_NAME  \
   --name=$WANDB_NAME \
   --instance_data_dir=$INSTANCE_DIR \

@@ -110,8 +110,8 @@ def get_down_block(
         )
     elif down_block_type == "CrossAttnDownBlock2D":
         if cross_attention_dim is None:
-            raise ValueError("cross_attention_dim must be specified for CrossAttnDownSeparateBlock2D")
-        return CrossAttnDownSeparateBlock2D(
+            raise ValueError("cross_attention_dim must be specified for CrossAttnDownBlock2D")
+        return CrossAttnDownBlock2D(
             num_layers=num_layers,
             transformer_layers_per_block=transformer_layers_per_block,
             in_channels=in_channels,
@@ -304,8 +304,8 @@ def get_up_block(
         )
     elif up_block_type == "CrossAttnUpBlock2D":
         if cross_attention_dim is None:
-            raise ValueError("cross_attention_dim must be specified for CrossAttnUpSeparateBlock2D")
-        return CrossAttnUpSeparateBlock2D(
+            raise ValueError("cross_attention_dim must be specified for CrossAttnUpBlock2D")
+        return CrossAttnUpBlock2D(
             num_layers=num_layers,
             transformer_layers_per_block=transformer_layers_per_block,
             in_channels=in_channels,
@@ -458,7 +458,7 @@ def get_up_block(
 
     raise ValueError(f"{up_block_type} does not exist.")
 
-class UNetMidBlock2DCrossAttnSeparate(UNetMidBlock2DCrossAttn):
+class UNetMidBlock2DCrossAttn(UNetMidBlock2DCrossAttn):
     def __init__(
         self,
         in_channels: int,
@@ -588,7 +588,7 @@ class UNetMidBlock2DCrossAttnSeparate(UNetMidBlock2DCrossAttn):
         return hidden_states
 
 
-class CrossAttnDownSeparateBlock2D(CrossAttnDownBlock2D):
+class CrossAttnDownBlock2D(CrossAttnDownBlock2D):
     def __init__(
         self,
         in_channels: int,
@@ -749,7 +749,7 @@ class CrossAttnDownSeparateBlock2D(CrossAttnDownBlock2D):
 
         return hidden_states, output_states
 
-class CrossAttnUpSeparateBlock2D(CrossAttnUpBlock2D):
+class CrossAttnUpBlock2D(CrossAttnUpBlock2D):
     def __init__(
         self,
         in_channels: int,

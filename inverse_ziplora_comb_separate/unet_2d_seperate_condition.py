@@ -34,7 +34,7 @@ from diffusers.models.unet_2d_blocks import (
 )
 from inverse_ziplora_comb_separate.unet_seperate_block import *
 
-class UNet2DConditionSeparateModel(UNet2DConditionModel):
+class UNet2DConditionModel(UNet2DConditionModel):
     def __init__(
         self,
         sample_size: Optional[int] = None,
@@ -49,7 +49,7 @@ class UNet2DConditionSeparateModel(UNet2DConditionModel):
             "CrossAttnDownBlock2D",
             "DownBlock2D",
         ),
-        mid_block_type: Optional[str] = "UNetMidBlock2DCrossAttnSeparate",
+        mid_block_type: Optional[str] = "UNetMidBlock2DCrossAttn",
         up_block_types: Tuple[str] = ("UpBlock2D", "CrossAttnUpBlock2D", "CrossAttnUpBlock2D", "CrossAttnUpBlock2D"),
         only_cross_attention: Union[bool, Tuple[bool]] = False,
         block_out_channels: Tuple[int] = (320, 640, 1280, 1280),
@@ -239,7 +239,7 @@ class UNet2DConditionSeparateModel(UNet2DConditionModel):
 
         # mid
         if mid_block_type == "UNetMidBlock2DCrossAttn":
-            self.mid_block = UNetMidBlock2DCrossAttnSeparate(
+            self.mid_block = UNetMidBlock2DCrossAttn(
                 transformer_layers_per_block=transformer_layers_per_block[-1],
                 in_channels=block_out_channels[-1],
                 temb_channels=blocks_time_embed_dim,

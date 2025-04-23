@@ -24,7 +24,7 @@ from diffusers.utils import (
 )
 from diffusers.schedulers import KarrasDiffusionSchedulers
 
-from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionSeparateModel
+from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionModel
 
 if is_invisible_watermark_available():
     from diffusers.pipelines.stable_diffusion_xl.watermark import StableDiffusionXLWatermarker
@@ -109,7 +109,7 @@ class StableDiffusionXLSeperatePipeline(
         text_encoder_2: CLIPTextModelWithProjection,
         tokenizer: CLIPTokenizer,
         tokenizer_2: CLIPTokenizer,
-        unet: UNet2DConditionSeparateModel,
+        unet: UNet2DConditionModel,
         scheduler: KarrasDiffusionSchedulers,
         image_encoder: CLIPVisionModelWithProjection = None,
         feature_extractor: CLIPImageProcessor = None,

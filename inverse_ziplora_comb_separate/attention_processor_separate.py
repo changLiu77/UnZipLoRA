@@ -22,7 +22,7 @@ else:
     xformers = None
     
 @maybe_allow_in_graph
-class AttentionSeparate(Attention):
+class Attention(Attention):
     def __init__(
         self,
         query_dim: int,
@@ -187,7 +187,7 @@ class AttnProcessor:
 
     def __call__(
         self,
-        attn: AttentionSeparate,
+        attn: Attention,
         hidden_states: torch.FloatTensor,
         encoder_hidden_states: Optional[torch.FloatTensor] = None,
         encoder_hidden_states_content: Optional[torch.FloatTensor] = None,

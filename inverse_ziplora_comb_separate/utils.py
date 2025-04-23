@@ -10,7 +10,7 @@ import itertools
 
 from inverse_ziplora_comb_separate.inverse_ziplora_separate import UnZipLoRALinearLayer, UnZipLoRALinearLayerInfer
 from inverse_ziplora_comb_separate.pipeline_stable_diffusion_xl_seperate import StableDiffusionXLSeperatePipeline
-from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionSeparateModel
+from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionModel
 
 from diffusers import (
      DDPMScheduler, 
@@ -150,7 +150,7 @@ def get_lora_weights(
             tensors[key] = f.get_tensor(key)
     return tensors
 
-def unziplora_set_forward_type(unet: UNet2DConditionSeparateModel, type: str = "both"):
+def unziplora_set_forward_type(unet: UNet2DConditionModel, type: str = "both"):
     """
     set forward type for the network: using either content part style part or both
     """
@@ -250,7 +250,7 @@ def insert_layer_dic_mask(unet, masked_layers, key, set_value=False, insert_togg
                         if set_value:
                             lora_layer.set_parameter_zero(toggle_key)
     return unet
-def insert_mask(unet: UNet2DConditionSeparateModel, key, mask_dictionary=None, set_value=False, insert_toggle=False, toggle_key="content"):
+def insert_mask(unet: UNet2DConditionModel, key, mask_dictionary=None, set_value=False, insert_toggle=False, toggle_key="content"):
     """
     set the hard mask for the blocks for block separation
     """
@@ -278,7 +278,7 @@ def inverse_ziplora_compute_weight_similarity(unet):
     return similarity.squeeze()
 
 def unet_inverse_ziplora_state_dict(
-    unet: UNet2DConditionSeparateModel, key: str, quick_release: bool = False
+    unet: UNet2DConditionModel, key: str, quick_release: bool = False
 ) -> Dict[str, torch.Tensor]:
     r"""
     Returns:
@@ -377,7 +377,7 @@ def use_lora_mergers_for_inference(
         merger_style[part] = tensors_style[merge_style]
     return merger_content, merger_style
 def insert_unziplora_to_unet(
-    unet: UNet2DConditionSeparateModel, content_lora_path: str, style_lora_path: str, weight_content_path: str = None, weight_style_path: str = None, \
+    unet: UNet2DConditionModel, content_lora_path: str, style_lora_path: str, weight_content_path: str = None, weight_style_path: str = None, \
         rank: int = 64, device: Optional[Union[torch.device, str]] = None, **kwargs
 ):
     """
@@ -468,7 +468,7 @@ def load_pipeline_from_sdxl(MODEL_ID,
     tokenizer_one: AutoTokenizer=None,
     tokenizer_two: AutoTokenizer=None,
     vae: AutoencoderKL=None,
-    unet: UNet2DConditionSeparateModel=None,
+    unet: UNet2DConditionModel=None,
     noise_scheduler: DDPMScheduler=None,
     text_encoder_one: CLIPTextModel=None, 
     text_encoder_two: CLIPTextModelWithProjection=None, 
@@ -495,7 +495,7 @@ def load_pipeline_from_sdxl(MODEL_ID,
                 revision=None
             )
     if unet is None:
-        unet = UNet2DConditionSeparateModel.from_pretrained(
+        unet = UNet2DConditionModel.from_pretrained(
             MODEL_ID, subfolder="unet", revision=None
         )
     if noise_scheduler is None:
@@ -530,7 +530,7 @@ def load_pipeline_from_sdxl(MODEL_ID,
 '''
 Get the current value of matrix
 '''
-def lora_original_value(unet: UNet2DConditionSeparateModel, key):
+def lora_original_value(unet: UNet2DConditionModel, key):
     original_mat = {}
     with torch.no_grad():
         for name, module in unet.named_modules():
@@ -545,7 +545,7 @@ def lora_original_value(unet: UNet2DConditionSeparateModel, key):
 '''
 clamp merger
 '''
-def lora_merge_clamp(unet: UNet2DConditionSeparateModel, key):
+def lora_merge_clamp(unet: UNet2DConditionModel, key):
     for name, module in unet.named_modules():
         if hasattr(module, "set_lora_layer"):
             lora_layer = getattr(module, "lora_layer")
@@ -556,7 +556,7 @@ def lora_merge_clamp(unet: UNet2DConditionSeparateModel, key):
 '''
 Log norm value block wise
 '''
-def lora_norm_log(unet: UNet2DConditionSeparateModel, key, quick_log=False, dim="L2", multiple=False):
+def lora_norm_log(unet: UNet2DConditionModel, key, quick_log=False, dim="L2", multiple=False):
     norm_dict = {}
     for name, module in unet.named_modules():
         if hasattr(module, "set_lora_layer"):
@@ -573,7 +573,7 @@ def lora_norm_log(unet: UNet2DConditionSeparateModel, key, quick_log=False, dim=
 '''
 Log merge value block wise
 '''
-def lora_merge_log(unet: UNet2DConditionSeparateModel, key, quick_log=False):
+def lora_merge_log(unet: UNet2DConditionModel, key, quick_log=False):
     norm_dict = {}
     for name, module in unet.named_modules():
         if hasattr(module, "set_lora_layer"):
@@ -587,7 +587,7 @@ def lora_merge_log(unet: UNet2DConditionSeparateModel, key, quick_log=False):
                     norm_dict[before_key] = torch.mean(getattr(lora_layer, f"merge_{key}"))
     return norm_dict
 
-def lora_merge_all_activate(unet: UNet2DConditionSeparateModel, value=True):
+def lora_merge_all_activate(unet: UNet2DConditionModel, value=True):
 # * If value => True: will use filter       + not train merger gradient 
 # * if value => False:will not use filter   + not train merger gradient
     for name, module in unet.named_modules():
@@ -613,7 +613,7 @@ def lora_cone_spectrum_log(merge_gradient, merge_weight):
     buffer = draw_concatenated_heatmap(cone_heatmap_matrix)
     return buffer
 
-def lora_merge_cone_select(unet: UNet2DConditionSeparateModel, mask_dictionary_style={}, mask_dictionary_content={}, logged=False, \
+def lora_merge_cone_select(unet: UNet2DConditionModel, mask_dictionary_style={}, mask_dictionary_content={}, logged=False, \
     column_ratio=0.05, avoid=True, accumulate=True):
     '''
     Initialize the saved model value for content and style soft mask merger
@@ -679,7 +679,7 @@ def lora_merge_cone_select(unet: UNet2DConditionSeparateModel, mask_dictionary_s
         return unet, draw_concatenated_heatmap(logged_cone_layer_content), draw_concatenated_heatmap(logged_cone_layer_style)
     else:
         return unet, logged_cone_layer_content, logged_cone_layer_style
-def lora_gradient_zeroout(unet: UNet2DConditionSeparateModel, finetune_mask):
+def lora_gradient_zeroout(unet: UNet2DConditionModel, finetune_mask):
     '''
     mask out the gradient during training to only allow training of certain columns
     '''

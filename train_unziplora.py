@@ -62,7 +62,7 @@ from diffusers.utils.import_utils import is_xformers_available
 
 from inverse_ziplora_comb_separate.inverse_ziplora_separate import UnZipLoRALinearLayer
 from inverse_ziplora_comb_separate.pipeline_stable_diffusion_xl_seperate import StableDiffusionXLSeperatePipeline
-from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionSeparateModel
+from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionModel
 from inverse_ziplora_comb_separate.utils import *
 
 # Will error if the minimal version of diffusers is not installed. Remove at your own risks.
@@ -1214,7 +1214,7 @@ def main(args):
         subfolder="vae" if args.pretrained_vae_model_name_or_path is None else None,
         revision=args.revision,
     )
-    unet = UNet2DConditionSeparateModel.from_pretrained(
+    unet = UNet2DConditionModel.from_pretrained(
         args.pretrained_model_name_or_path, subfolder="unet", revision=args.revision
     )
     # We only train the additional adapter LoRA layers

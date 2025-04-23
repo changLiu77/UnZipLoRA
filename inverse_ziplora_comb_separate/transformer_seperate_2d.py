@@ -13,7 +13,7 @@ from diffusers.models.lora import LoRACompatibleConv, LoRACompatibleLinear
 from diffusers.models.normalization import AdaLayerNormSingle
 from diffusers.models.transformer_2d import Transformer2DModel, Transformer2DModelOutput
 
-from inverse_ziplora_comb_separate.attention_separate import BasicTransformerSeparateBlock
+from inverse_ziplora_comb_separate.attention_separate import BasicTransformerBlock
 
 
 class Transformer2DSeperateModel(Transformer2DModel):
@@ -110,7 +110,7 @@ class Transformer2DSeperateModel(Transformer2DModel):
         # 3. Define transformers blocks
         self.transformer_blocks = nn.ModuleList(
             [
-                BasicTransformerSeparateBlock(
+                BasicTransformerBlock(
                     inner_dim,
                     num_attention_heads,
                     attention_head_dim,
