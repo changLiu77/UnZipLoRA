@@ -1,5 +1,4 @@
 export MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
-# export MODEL_PATH="inverse_ziplora"
 export RANK=64
 export NUM=1
 

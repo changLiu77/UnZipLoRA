@@ -8,7 +8,7 @@ from safetensors import safe_open
 from diffusers.loaders.lora import LORA_WEIGHT_NAME_SAFE
 import itertools
 
-from inverse_ziplora_comb_separate.inverse_ziplora_separate import InverseZipLoRALinearLayer, InverseZipLoRALinearLayerInfer
+from inverse_ziplora_comb_separate.inverse_ziplora_separate import UnZipLoRALinearLayer, UnZipLoRALinearLayerInfer
 from inverse_ziplora_comb_separate.pipeline_stable_diffusion_xl_seperate import StableDiffusionXLSeperatePipeline
 from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionSeparateModel
 
@@ -150,7 +150,7 @@ def get_lora_weights(
             tensors[key] = f.get_tensor(key)
     return tensors
 
-def inverse_ziplora_set_forward_type(unet: UNet2DConditionSeparateModel, type: str = "both"):
+def unziplora_set_forward_type(unet: UNet2DConditionSeparateModel, type: str = "both"):
     """
     set forward type for the network: using either content part style part or both
     """
@@ -292,8 +292,8 @@ def unet_inverse_ziplora_state_dict(
         if hasattr(module, "set_lora_layer"):
             lora_layer = getattr(module, "lora_layer")
             if lora_layer is not None:
-                assert hasattr(lora_layer, "get_inverselora_weight"), lora_layer
-                weight_down, weight_up = lora_layer.get_inverselora_weight(key)
+                assert hasattr(lora_layer, "get_unziplora_weight"), lora_layer
+                weight_down, weight_up = lora_layer.get_unziplora_weight(key)
                 lora_state_dict[f"unet.{name}.lora.up.weight"] = weight_up.contiguous()
                 lora_state_dict[f"unet.{name}.lora.down.weight"] = weight_down.contiguous()
                 merge_matrix = lora_layer.get_merger_mask(key)
@@ -303,16 +303,16 @@ def unet_inverse_ziplora_state_dict(
     return lora_state_dict, mask_state_dict
 
 
-def initialize_inverse_ziplora_layer_for_inference(state_dict_content_down, state_dict_content_up, \
+def initialize_unziplora_layer_for_inference(state_dict_content_down, state_dict_content_up, \
     state_dict_style_down, state_dict_style_up, \
     state_dict_merger_content, state_dict_merger_style, \
     part, **model_kwargs):
     '''
-    Insert inverse ziplora to inference
+    Insert unziplora to inference
     '''
-    inverse_ziplora_layer = InverseZipLoRALinearLayerInfer(**model_kwargs)
+    unziplora_layer = UnZipLoRALinearLayerInfer(**model_kwargs)
     if state_dict_merger_content is not None and state_dict_merger_style is not None:
-        inverse_ziplora_layer.load_state_dict(
+        unziplora_layer.load_state_dict(
             {
                 "lora_matrix_dic.content_down.weight": state_dict_content_down[part],
                 "lora_matrix_dic.content_up.weight": state_dict_content_up[part],
@@ -324,7 +324,7 @@ def initialize_inverse_ziplora_layer_for_inference(state_dict_content_down, stat
             strict=False,
         )
     else:
-        inverse_ziplora_layer.load_state_dict(
+        unziplora_layer.load_state_dict(
             {
                 "lora_matrix_dic.content_down.weight": state_dict_content_down[part],
                 "lora_matrix_dic.content_up.weight": state_dict_content_up[part],
@@ -333,7 +333,7 @@ def initialize_inverse_ziplora_layer_for_inference(state_dict_content_down, stat
             },
             strict=False,
         )
-    return inverse_ziplora_layer
+    return unziplora_layer
 
 def use_lora_weights_for_inference(
     tensors: Dict[str, torch.Tensor], key: str, prefix: str = "unet.unet."
@@ -376,7 +376,7 @@ def use_lora_mergers_for_inference(
         merger_content[part] = tensors_content[merge_content]
         merger_style[part] = tensors_style[merge_style]
     return merger_content, merger_style
-def insert_inverse_ziplora_to_unet(
+def insert_unziplora_to_unet(
     unet: UNet2DConditionSeparateModel, content_lora_path: str, style_lora_path: str, weight_content_path: str = None, weight_style_path: str = None, \
         rank: int = 64, device: Optional[Union[torch.device, str]] = None, **kwargs
 ):
@@ -419,7 +419,7 @@ def insert_inverse_ziplora_to_unet(
         }
 
         attn_module.to_q.set_lora_layer(
-            initialize_inverse_ziplora_layer_for_inference(
+            initialize_unziplora_layer_for_inference(
                 in_features=attn_module.to_q.in_features,
                 out_features=attn_module.to_q.out_features,
                 part="to_q",
@@ -430,7 +430,7 @@ def insert_inverse_ziplora_to_unet(
             )
         )
         attn_module.to_k.set_lora_layer(
-            initialize_inverse_ziplora_layer_for_inference(
+            initialize_unziplora_layer_for_inference(
                 in_features=attn_module.to_k.in_features,
                 out_features=attn_module.to_k.out_features,
                 part="to_k",
@@ -441,7 +441,7 @@ def insert_inverse_ziplora_to_unet(
             )
         )
         attn_module.to_v.set_lora_layer(
-            initialize_inverse_ziplora_layer_for_inference(
+            initialize_unziplora_layer_for_inference(
                 in_features=attn_module.to_v.in_features,
                 out_features=attn_module.to_v.out_features,
                 part="to_v",
@@ -452,7 +452,7 @@ def insert_inverse_ziplora_to_unet(
             )
         )
         attn_module.to_out[0].set_lora_layer(
-            initialize_inverse_ziplora_layer_for_inference(
+            initialize_unziplora_layer_for_inference(
                 in_features=attn_module.to_out[0].in_features,
                 out_features=attn_module.to_out[0].out_features,
                 part="to_out.0",
@@ -537,8 +537,8 @@ def lora_original_value(unet: UNet2DConditionSeparateModel, key):
             if hasattr(module, "set_lora_layer"):
                 lora_layer = getattr(module, "lora_layer")
                 if lora_layer is not None:
-                    assert hasattr(lora_layer, "get_inverselora_weight"), lora_layer
-                    weight_down, weight_up = lora_layer.get_inverselora_weight(key)
+                    assert hasattr(lora_layer, "get_unziplora_weight"), lora_layer
+                    weight_down, weight_up = lora_layer.get_unziplora_weight(key)
                     original_mat[name] = copy.deepcopy(weight_down.T @ weight_up.T)
     return original_mat
 
@@ -563,11 +563,11 @@ def lora_norm_log(unet: UNet2DConditionSeparateModel, key, quick_log=False, dim=
             lora_layer = getattr(module, "lora_layer")
             before_key = f"{key}_{name.split('transformer')[0]}_norm"
             if lora_layer is not None:
-                assert hasattr(lora_layer, "get_inverse_lora_norm"), lora_layer
+                assert hasattr(lora_layer, "get_unziplora_norm"), lora_layer
                 if before_key in norm_dict.keys():
-                    norm_dict[before_key].append(lora_layer.get_inverse_lora_norm(key, dim=dim, quick_log=quick_log, multiple=multiple))
+                    norm_dict[before_key].append(lora_layer.get_unziplora_norm(key, dim=dim, quick_log=quick_log, multiple=multiple))
                 else:
-                    norm_dict[before_key] = [lora_layer.get_inverse_lora_norm(key, dim=dim, quick_log=quick_log, multiple=multiple)]
+                    norm_dict[before_key] = [lora_layer.get_unziplora_norm(key, dim=dim, quick_log=quick_log, multiple=multiple)]
     norm_dict = {key: torch.mean(torch.tensor(value)) for key,value in norm_dict.items()}
     return norm_dict
 '''
@@ -659,12 +659,12 @@ def lora_merge_cone_select(unet: UNet2DConditionSeparateModel, mask_dictionary_s
                             masked_key = "content"
                     else:
                         masked_key = None
-                    assert hasattr(lora_layer, "get_inverselora_cone"), lora_layer
+                    assert hasattr(lora_layer, "get_unziplora_cone"), lora_layer
                     # * store cone in self.attr
                     # * if it is accumulating: added to attr
                     # * if not accumulate or prepare to "determine mask": compute cone then store the "mask"
-                    lora_layer.get_inverselora_cone("style", accumulate=accumulate)
-                    lora_layer.get_inverselora_cone("content", accumulate=accumulate)
+                    lora_layer.get_unziplora_cone("style", accumulate=accumulate)
+                    lora_layer.get_unziplora_cone("content", accumulate=accumulate)
                     if accumulate is False: 
                         lora_layer.set_layer_mask("content", value=True)
                         lora_layer.set_layer_mask("style", value=True)

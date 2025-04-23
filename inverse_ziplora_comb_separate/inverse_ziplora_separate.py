@@ -4,7 +4,7 @@ import torch
 from torch import nn
 import copy
 
-class InverseZipLoRALinearLayer(nn.Module):
+class UnZipLoRALinearLayer(nn.Module):
     def __init__(
         self,
         in_features: int, 
@@ -81,7 +81,7 @@ class InverseZipLoRALinearLayer(nn.Module):
     def set_layer_mask(self, key, value=True):
         self.masked_matrix[key] = value
 
-    def get_inverse_lora_norm(self, key, dim="L2", quick_log=False, multiple=True):
+    def get_unziplora_norm(self, key, dim="L2", quick_log=False, multiple=True):
         if multiple is True: 
             merge_matrix = getattr(self, f"merge_{key}")
             # merge_matrix = (torch.tanh(merge_matrix) + 1) / 2 #* merge_matrix
@@ -101,7 +101,7 @@ class InverseZipLoRALinearLayer(nn.Module):
         norm_return = torch.tensor(norm.item()).to(self.device) if quick_log else norm.unsqueeze(0)
         return norm_return 
     
-    def get_inverselora_weight(self, key):
+    def get_unziplora_weight(self, key):
         # print(self.lora_matrix_dic.keys())
         # * Get weight without filter
         merge_matrix = getattr(self, f"merge_{key}")
@@ -114,7 +114,7 @@ class InverseZipLoRALinearLayer(nn.Module):
             return self.lora_matrix_dic[f"{key}_down"].weight.data, self.lora_matrix_dic[f"{key}_up"].weight.data \
                  * filter_matrix.unsqueeze(1)
     
-    def get_inverselora_cone(self, key, accumulate=True):
+    def get_unziplora_cone(self, key, accumulate=True):
         '''
         Compute cone value for both style and content, store the value in self.column_score
         Will be used when all columns are used ==> The computed cone will help determine which columns \
@@ -262,7 +262,7 @@ class InverseZipLoRALinearLayer(nn.Module):
             added_hidden_states = up_hidden_states_style.to(orig_dtype)
         return added_hidden_states
     
-class InverseZipLoRALinearLayerInfer(nn.Module):
+class UnZipLoRALinearLayerInfer(nn.Module):
     def __init__(
         self,
         in_features: int, 

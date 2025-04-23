@@ -60,10 +60,9 @@ from diffusers.optimization import get_scheduler
 from diffusers.utils import check_min_version, is_wandb_available
 from diffusers.utils.import_utils import is_xformers_available
 
-from inverse_ziplora_comb_separate.inverse_ziplora_separate import InverseZipLoRALinearLayer
+from inverse_ziplora_comb_separate.inverse_ziplora_separate import UnZipLoRALinearLayer
 from inverse_ziplora_comb_separate.pipeline_stable_diffusion_xl_seperate import StableDiffusionXLSeperatePipeline
 from inverse_ziplora_comb_separate.unet_2d_seperate_condition import UNet2DConditionSeparateModel
-# from inverse_ziplora.utils import *
 from inverse_ziplora_comb_separate.utils import *
 
 # Will error if the minimal version of diffusers is not installed. Remove at your own risks.
@@ -1276,7 +1275,7 @@ def main(args):
 
         # Set the `lora_layer` attribute of the attention-related matrices.
         attn_module.to_q.set_lora_layer(
-            InverseZipLoRALinearLayer(
+            UnZipLoRALinearLayer(
                 in_features=attn_module.to_q.in_features,
                 out_features=attn_module.to_q.out_features,
                 rank=args.rank,
@@ -1287,7 +1286,7 @@ def main(args):
             )
         )
         attn_module.to_k.set_lora_layer(
-            InverseZipLoRALinearLayer(
+            UnZipLoRALinearLayer(
                 in_features=attn_module.to_k.in_features,
                 out_features=attn_module.to_k.out_features,
                 rank=args.rank,
@@ -1298,7 +1297,7 @@ def main(args):
             )
         )
         attn_module.to_v.set_lora_layer(
-            InverseZipLoRALinearLayer(
+            UnZipLoRALinearLayer(
                 in_features=attn_module.to_v.in_features,
                 out_features=attn_module.to_v.out_features,
                 rank=args.rank,
@@ -1309,7 +1308,7 @@ def main(args):
             )
         )
         attn_module.to_out[0].set_lora_layer(
-            InverseZipLoRALinearLayer(
+            UnZipLoRALinearLayer(
                 in_features=attn_module.to_out[0].in_features,
                 out_features=attn_module.to_out[0].out_features,
                 rank=args.rank,
@@ -2012,7 +2011,7 @@ def main(args):
                         model_inputs_content = noise_scheduler.add_noise(
                             model_inputs["content"], noise, timesteps
                         )
-                        inverse_ziplora_set_forward_type(unet, type="content")
+                        unziplora_set_forward_type(unet, type="content")
                         model_pred_content = unet(
                             model_inputs_content,
                             timesteps,
@@ -2022,7 +2021,7 @@ def main(args):
                         prior_loss_content = F.mse_loss(
                             model_pred_content.float(), noise.float(), reduction="mean"
                         )
-                        inverse_ziplora_set_forward_type(unet, type="both")
+                        unziplora_set_forward_type(unet, type="both")
                         loss = loss + args.prior_loss_weight * prior_loss_content
                     # print("content", noise.shape, model_inputs[1].shape, model_pred_content.shape)
                     if args.class_data_dir_2 is not None:
@@ -2035,7 +2034,7 @@ def main(args):
                         model_inputs_style = noise_scheduler.add_noise(
                             model_inputs["style"], noise, timesteps
                         )
-                        inverse_ziplora_set_forward_type(unet, type="style")
+                        unziplora_set_forward_type(unet, type="style")
                         model_pred_style = unet(
                             model_inputs_style,
                             timesteps,
@@ -2046,7 +2045,7 @@ def main(args):
                         prior_loss_style = F.mse_loss(
                             model_pred_style.float(), noise.float(), reduction="mean"
                         ) 
-                        inverse_ziplora_set_forward_type(unet, type="both")
+                        unziplora_set_forward_type(unet, type="both")
                         loss = loss + args.prior_loss_weight_2 * prior_loss_style
                 
                 accelerator.backward(loss)
@@ -2232,17 +2231,17 @@ def main(args):
                     logged_images.append(concatenate_horizontal_img(images))
                     saved_images += images
                     if args.validation_prompt_content is not None:
-                        inverse_ziplora_set_forward_type(unet, type="content")
+                        unziplora_set_forward_type(unet, type="content")
                         images, _ = log_validation(pipeline, args, accelerator, args.validation_prompt_content, args.validation_prompt_content, args.validation_prompt_content)
                         logged_images.append(concatenate_horizontal_img(images))
                         saved_images += images
-                        inverse_ziplora_set_forward_type(unet, type="both")
+                        unziplora_set_forward_type(unet, type="both")
                     if args.validation_prompt_style is not None:
-                        inverse_ziplora_set_forward_type(unet, type="style")
+                        unziplora_set_forward_type(unet, type="style")
                         images, _ = log_validation(pipeline, args, accelerator,args.validation_prompt_style, args.validation_prompt_style, validation_prompt_style=args.validation_prompt_style)
                         logged_images.append(concatenate_horizontal_img(images))
                         saved_images += images
-                        inverse_ziplora_set_forward_type(unet, type="both")
+                        unziplora_set_forward_type(unet, type="both")
 
                     for tracker in accelerator.trackers:
                         phase_name = "validation"
@@ -2357,7 +2356,7 @@ def main(args):
         )
 
         # load attention processors
-        pipeline.unet = insert_inverse_ziplora_to_unet(pipeline.unet, f"{args.output_dir}_content", f"{args.output_dir}_style", \
+        pipeline.unet = insert_unziplora_to_unet(pipeline.unet, f"{args.output_dir}_content", f"{args.output_dir}_style", \
                 weight_content_path=f"{args.output_dir}_merger_content.pth" , weight_style_path=f"{args.output_dir}_merger_style.pth", \
                 rank=args.rank, device=accelerator.device)
         # pipeline.unet = unet

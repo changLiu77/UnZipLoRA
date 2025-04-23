@@ -32,7 +32,7 @@ export VALID_STYLE_PROMPT="A dog in geometric shapes style"
 
 
 
-accelerate launch train_inverse_ziplora_layer_column.py \
+accelerate launch train_unziplora_layer_column.py \
   --pretrained_model_name_or_path=$MODEL_NAME  \
   --name=$WANDB_NAME \
   --instance_data_dir=$INSTANCE_DIR \

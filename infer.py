@@ -148,14 +148,14 @@ def main(args):
             MODEL_ID, vae = vae,
             )
             if args.with_unziplora:
-                pipeline.unet = insert_inverse_ziplora_to_unet(pipeline.unet, 
+                pipeline.unet = insert_unziplora_to_unet(pipeline.unet, 
                     f"{args.output_dir}_content", 
                     f"{args.output_dir}_style",
                     weight_content_path=f"{args.output_dir}_merger_content.pth",
                     weight_style_path=f"{args.output_dir}_merger_style.pth",
                     rank=args.rank)
             else:
-                pipeline.unet = insert_inverse_ziplora_to_unet(pipeline.unet, 
+                pipeline.unet = insert_unziplora_to_unet(pipeline.unet, 
                     f"{args.output_dir}_content", 
                     f"{args.output_dir}_style",
                     rank=args.rank)
