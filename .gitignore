@@ -6,3 +6,4 @@ wandb/*
 output/*
 *.pth
 *.safetensors
+models/
