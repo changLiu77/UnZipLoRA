@@ -82,6 +82,9 @@ def cone_column_sparsity(cone, thresh=1e-8):
 
 def draw_concatenated_heatmap(data_dic, save_path=None):
     num_heatmaps = len(list(data_dic.keys()))
+    if num_heatmaps == 0:
+        print(f"no heatmaps to record!!")
+        return None  
     fig, axes = plt.subplots(1, num_heatmaps, figsize=(num_heatmaps * 15, 15))
 
     if num_heatmaps == 1:

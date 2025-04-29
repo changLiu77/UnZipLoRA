@@ -2081,7 +2081,7 @@ def main(args):
                             if (global_step - num_update_steps_per_epoch) % sampled_steps == 0:
                                 with torch.no_grad():
                                     unet, content_cone_buffer, style_cone_buffer = lora_merge_cone_select(unet, mask_dictionary_style, mask_dictionary_content, \
-                                        logged=True, column_ratio=args.column_ratio, avoid=args.with_no_overlap_first, 
+                                        logged=args.with_grad_record, column_ratio=args.column_ratio, avoid=args.with_no_overlap_first, 
                                         accumulate=False)
                                     with_orthognal = True
                             else:
@@ -2160,7 +2160,7 @@ def main(args):
             if with_orthognal and loss_orthognal is not None:
                 logs["orthognal loss"] = loss_orthognal.detach().item()
             if args.with_grad_record and (global_step - 1 - num_update_steps_per_epoch) % sampled_steps == 0 and \
-                args.with_period_column_separation:
+                args.with_period_column_separation and content_cone_buffer and style_cone_buffer:
                 tracker.log(
                     {
                         "cone sparsity": [wandb.Image(content_cone_buffer), wandb.Image(style_cone_buffer)]

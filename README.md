@@ -63,6 +63,7 @@ __UnZipLoRA__ proposes three separation strategies. All hyperparameters in the s
 | `--with_freeze_unet`         | Apply block separation                   | `True`        |
 | `--with_saved_per_validation`| Save model on every validation step      | `False`        |
 | `--with_image_per_validation`| Generate images at every validation step    | `False`        |
+| `--with_grad_record`         | Visualize the cone heatmap for selected layers | `False`        |
 
 ---
 
