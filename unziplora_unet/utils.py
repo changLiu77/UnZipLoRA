@@ -9,7 +9,7 @@ from diffusers.loaders.lora import LORA_WEIGHT_NAME_SAFE
 import itertools
 
 from unziplora_unet.unziplora_linear_layer import UnZipLoRALinearLayer, UnZipLoRALinearLayerInfer
-from unziplora_unet.pipeline_stable_diffusion_xl import StableDiffusionXLPipeline
+from unziplora_unet.pipeline_stable_diffusion_xl import StableDiffusionXLUnZipLoRAPipeline
 from unziplora_unet.unet_2d_condition import UNet2DConditionModel
 
 from diffusers import (
@@ -22,6 +22,12 @@ from transformers import (
     CLIPTextModelWithProjection,
     )
 from record_utils.cone import cone_matrix, cone_column_sparsity, draw_concatenated_heatmap
+
+universal_nevigate = [
+"watermark", "lowres", "low quality",
+"blur", "out of focus", "grainy", "jpeg artifacts",
+"cropped", "poorly lit", "duplicate",
+]
 
 SDXL_group_list = [
     "up_blocks.0.attentions.0.",
@@ -514,7 +520,7 @@ def load_pipeline_from_sdxl(MODEL_ID,
             subfolder="text_encoder_2",
             revision=None,
         )
-    pipeline = StableDiffusionXLPipeline(
+    pipeline = StableDiffusionXLUnZipLoRAPipeline(
         vae = vae,
         text_encoder=text_encoder_one,
         text_encoder_2=text_encoder_two,

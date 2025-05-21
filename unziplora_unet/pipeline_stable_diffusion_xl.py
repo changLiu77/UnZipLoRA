@@ -54,7 +54,7 @@ EXAMPLE_DOC_STRING = """
 
 
 
-class StableDiffusionXLPipeline(
+class StableDiffusionXLUnZipLoRAPipeline(
     StableDiffusionXLPipeline
 ):
     r"""

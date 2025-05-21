@@ -61,7 +61,7 @@ from diffusers.utils import check_min_version, is_wandb_available
 from diffusers.utils.import_utils import is_xformers_available
 
 from unziplora_unet.unziplora_linear_layer import UnZipLoRALinearLayer
-from unziplora_unet.pipeline_stable_diffusion_xl import StableDiffusionXLPipeline
+from unziplora_unet.pipeline_stable_diffusion_xl import StableDiffusionXLUnZipLoRAPipeline
 from unziplora_unet.unet_2d_condition import UNet2DConditionModel
 from unziplora_unet.utils import *
 
@@ -718,28 +718,38 @@ def parse_args(input_args=None):
     # * Added flags or parameters
     parser.add_argument(
         "--with_finetune_mask",
-        action="store_true",
+        # action="store_true",
+        type=lambda x: bool(strtobool(str(x))),
+        default=False,
         help="Flag to only train the overlap mask or all mask.",
     )
     parser.add_argument(
         "--with_saved_per_validation",
-        action="store_true",
+        # action="store_true",
+        type=lambda x: bool(strtobool(str(x))),
+        default=False,
         help="Flag to store model when validation",
     )
     parser.add_argument(
         "--with_image_per_validation",
-        action="store_true",
+        # action="store_true",
+        type=lambda x: bool(strtobool(str(x))),
+        default=False,
         help="Flag to store generated images when validation",
     )
     parser.add_argument(
         "--with_freeze_unet",
-        action="store_false",
+        # action="store_false",
+        default=True,
+        type=lambda x: bool(strtobool(str(x))),
         help="Flag to add block separation",
     )
     # * column separation parameters
     parser.add_argument(
         "--with_period_column_separation",
-        action="store_false",
+        type=lambda x: bool(strtobool(str(x))),
+        default=True,
+        # action="store_false",
         help="Flag to add columns periodically",
     )
     parser.add_argument(
@@ -756,12 +766,16 @@ def parse_args(input_args=None):
     )
     parser.add_argument(
         "--with_no_overlap_first",
-        action="store_false",
+        # action="store_false",
+        type=lambda x: bool(strtobool(str(x))),
+        default=True,
         help="Flag to add style columns that avoid overlap with subject columns",
     )
     parser.add_argument(
         "--with_accumulate_cone",
-        action="store_false",
+        type=lambda x: bool(strtobool(str(x))),
+        # action="store_false",
+        default=True,
         help="Flag to compute the cone accumulatively (compute for one epoch)",
     )
 
@@ -784,6 +798,9 @@ def parse_args(input_args=None):
     )
     parser.add_argument("--name", type=str, default=None, help="Name of wandb project",)
     parser.add_argument("--tags", nargs="*", default=[], help="Tags of wandb project",)
+    parser.add_argument("--entity", type=str, default="changln")
+    parser.add_argument("--wandb_dir", type=str, default=None)
+    
     if input_args is not None:
         args = parser.parse_args(input_args)
     else:
@@ -1797,7 +1814,21 @@ def main(args):
     # The trackers initializes automatically on the main process.
     if accelerator.is_main_process:
         config = vars(args)
-        accelerator.init_trackers("dreambooth-inzerse_ziplora-sd-xl", config=config)
+        if args.wandb_dir is None:
+            accelerator.init_trackers("dreambooth-inzerse_ziplora-sd-xl", config=config, 
+                init_kwargs={
+                    "wandb": {
+                    "entity": args.entity
+                    }
+                })
+        else:
+            accelerator.init_trackers("dreambooth-inzerse_ziplora-sd-xl", config=config, 
+                init_kwargs={
+                    "wandb": {
+                    "entity": args.entity,
+                    "dir": args.wandb_dir
+                    }
+                })
         for tracker in accelerator.trackers:
             if tracker.name == "wandb":
                 tags = []
@@ -1836,13 +1867,13 @@ def main(args):
         generator = torch.Generator(device=accelerator.device).manual_seed(args.seed) if args.seed else None
         # Currently the context determination is a bit hand-wavy. We can improve it in the future if there's a better
         # way to condition it. Reference: https://github.com/huggingface/diffusers/pull/7126#issuecomment-1968523051
-        if pipeline.__class__.__name__ == 'StableDiffusionXLPipeline':
+        if pipeline.__class__.__name__ == 'StableDiffusionXLUnZipLoRAPipeline':
             pipeline_args = {"prompt": validation_prompt, 
                             "prompt_content": validation_prompt_content, 
                             "prompt_style": validation_prompt_style}
         else:   
             pipeline_args = {"prompt": validation_prompt}
-        images = [pipeline(**pipeline_args, generator=generator).images[0] for _ in range(args.num_validation_images)]
+        images = [pipeline(**pipeline_args, generator=generator, negative_prompt=", ".join(f"({w}:1.2)" for w in universal_nevigate)).images[0] for _ in range(args.num_validation_images)]
         if accelerator.trackers[0].name == "tensorboard":
             image_lst = np.stack([np.asarray(img) for img in images])
         if accelerator.trackers[0].name == "wandb":
@@ -2195,7 +2226,7 @@ def main(args):
                             subfolder="text_encoder_2",
                             revision=args.revision,
                         )
-                    pipeline = StableDiffusionXLPipeline.from_pretrained(
+                        pipeline = StableDiffusionXLUnZipLoRAPipeline.from_pretrained(
                         args.pretrained_model_name_or_path,
                         vae=vae,
                         text_encoder=accelerator.unwrap_model(text_encoder_one),
