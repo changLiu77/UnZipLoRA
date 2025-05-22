@@ -8,7 +8,7 @@ export sampled_column_ratio=0.1
 export CONTENT_LR=0.00005
 export STYLE_LR=0.00005
 export weight_lr=0.005
-export similarity_lambda=0.01
+export similarity_lambda=0.5
 export RANK=64
 export WANDB_NAME="unziplora"
 export INSTANCE_DIR="instance_data/sketch_cat"
@@ -55,11 +55,10 @@ accelerate launch train_unziplora.py \
   --mixed_precision="fp16" \
   --seed="0" \
   --use_8bit_adam \
-  --push_to_hub \
   --validation_content="${VALID_CONTENT}" \
   --validation_style="${VALID_STYLE}" \
   --validation_prompt="${VALID_PROMPT}" \
   --validation_prompt_style="${VALID_STYLE_PROMPT}" \
   --validation_prompt_content="${VALID_CONTENT_PROMPT}" \
   --sample_times=$period_sample_epoch \
-  --column_ratio=$sampled_column_ratio 
+  --column_ratio=$sampled_column_ratio

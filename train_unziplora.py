@@ -718,38 +718,38 @@ def parse_args(input_args=None):
     # * Added flags or parameters
     parser.add_argument(
         "--with_finetune_mask",
-        # action="store_true",
-        type=lambda x: bool(strtobool(str(x))),
-        default=False,
+        action="store_true",
+        # type=lambda x: bool(strtobool(str(x))),
+        # default=False,
         help="Flag to only train the overlap mask or all mask.",
     )
     parser.add_argument(
         "--with_saved_per_validation",
-        # action="store_true",
-        type=lambda x: bool(strtobool(str(x))),
-        default=False,
+        action="store_true",
+        # type=lambda x: bool(strtobool(str(x))),
+        # default=False,
         help="Flag to store model when validation",
     )
     parser.add_argument(
         "--with_image_per_validation",
-        # action="store_true",
-        type=lambda x: bool(strtobool(str(x))),
-        default=False,
+        action="store_true",
+        # type=lambda x: bool(strtobool(str(x))),
+        # default=False,
         help="Flag to store generated images when validation",
     )
     parser.add_argument(
         "--with_freeze_unet",
-        # action="store_false",
-        default=True,
-        type=lambda x: bool(strtobool(str(x))),
+        action="store_false",
+        # default=True,
+        # type=lambda x: bool(strtobool(str(x))),
         help="Flag to add block separation",
     )
     # * column separation parameters
     parser.add_argument(
         "--with_period_column_separation",
-        type=lambda x: bool(strtobool(str(x))),
-        default=True,
-        # action="store_false",
+        # type=lambda x: bool(strtobool(str(x))),
+        # default=True,
+        action="store_false",
         help="Flag to add columns periodically",
     )
     parser.add_argument(
@@ -766,16 +766,16 @@ def parse_args(input_args=None):
     )
     parser.add_argument(
         "--with_no_overlap_first",
-        # action="store_false",
-        type=lambda x: bool(strtobool(str(x))),
-        default=True,
+        action="store_false",
+        # type=lambda x: bool(strtobool(str(x))),
+        # default=True,
         help="Flag to add style columns that avoid overlap with subject columns",
     )
     parser.add_argument(
         "--with_accumulate_cone",
-        type=lambda x: bool(strtobool(str(x))),
-        # action="store_false",
-        default=True,
+        # type=lambda x: bool(strtobool(str(x))),
+        action="store_false",
+        # default=True,
         help="Flag to compute the cone accumulatively (compute for one epoch)",
     )
 
