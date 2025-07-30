@@ -2,7 +2,7 @@
 [\[Paper\]](https://arxiv.org/abs/2412.04465) 
 [\[Project Page\]](https://unziplora.github.io/)
 
-**(ICCV 2025)**
+**(ICCV 2025 Highlight)**
 
 ![image](cover_images/teaser.png)
 
