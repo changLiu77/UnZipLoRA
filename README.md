@@ -91,13 +91,12 @@ You can download two example models from [__Google Drive__](https://drive.google
 ## Citations
 If you find this work helpful, please cite us as:
 ```
-@misc{liu2024unziploraseparatingcontentstyle,
-title={UnZipLoRA: Separating Content and Style from a Single Image},
-author={Chang Liu and Viraj Shah and Aiyu Cui and Svetlana Lazebnik},
-year={2024},
-eprint={2412.04465},
-archivePrefix={arXiv},
-primaryClass={cs.CV},
-url={https://arxiv.org/abs/2412.04465},
+@InProceedings{Liu_2025_ICCV,
+    author    = {Liu, Chang and Shah, Viraj and Cui, Aiyu and Lazebnik, Svetlana},
+    title     = {UnZipLoRA: Separating Content and Style from a Single Image},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2025},
+    pages     = {16776-16785}
 }
 ```
